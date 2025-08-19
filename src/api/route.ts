@@ -1,4 +1,15 @@
+import postgres, { Sql } from 'postgres';
 import { NextRequest, NextResponse } from 'next/server';
+
+class PostgresUserRepository {
+  private readonly sql: Sql;
+
+  constructor() {
+    const connectionString =
+      "postgresql://postgres.ugvrokvjlcfxauganbbs:EDsqbLuQ7AZ8KBem@aws-0-us-east-1.pooler.supabase.com:6543/postgres";
+    this.sql = postgres(connectionString, { ssl: "require" });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
