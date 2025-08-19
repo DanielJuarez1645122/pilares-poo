@@ -9,6 +9,18 @@ class PostgresUserRepository {
       "postgresql://postgres.ugvrokvjlcfxauganbbs:EDsqbLuQ7AZ8KBem@aws-0-us-east-1.pooler.supabase.com:6543/postgres";
     this.sql = postgres(connectionString, { ssl: "require" });
   }
+
+  async save(email: string, firstname: string, lastname: string): Promise<void> {
+    try {
+      await this.sql`
+        INSERT INTO users (email, firstname, lastname)
+        VALUES (${email}, ${firstname}, ${lastname});
+      `;
+    } catch (error) {
+      console.error("Error saving user:", error);
+      throw new Error("Failed to save user");
+    }
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -43,6 +55,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    const repo = new PostgresUserRepository();
+    await repo.save(email, firstname, lastname);
 
     return NextResponse.json({
       message: 'Data saved successfully',
