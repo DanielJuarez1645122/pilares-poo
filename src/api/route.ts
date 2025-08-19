@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { UserRegister } from './user-registrer';
 import UserRepository from './user-repository';
 
-const repo = new UserRepository();
+const repository = new UserRepository();
+const userRegister = new UserRegister(repository);
 
 export async function POST(req: NextRequest) {
   try {
     const { email, firstname, lastname } = await req.json();
-    await repo.save(email, firstname, lastname);
+
+    await userRegister.register(email, firstname, lastname);
 
     return NextResponse.json({
       message: "User saved successfully",

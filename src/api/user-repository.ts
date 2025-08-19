@@ -1,38 +1,14 @@
-import postgres, { Sql } from 'postgres';
+import { User } from "./user";
+import { Database } from "./db-connection";
 
 export default class UserRepository {
-  private readonly sql: Sql;
+   private sql = Database.getConnection();
 
-  constructor() {
-    const connectionString =
-      "postgresql://postgres.ugvrokvjlcfxauganbbs:EDsqbLuQ7AZ8KBem@aws-0-us-east-1.pooler.supabase.com:6543/postgres";
-    this.sql = postgres(connectionString, { ssl: "require" });
-  }
-
-  private validate(email: string, firstname: string, lastname: string): string | null {
-    if (!email || !firstname || !lastname) return "Write all items";
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return "Write email format";
-
-    const nameRegex = /^[a-zA-ZÀ-ÿ\s]{2,}$/;
-    if (!nameRegex.test(firstname) || !nameRegex.test(lastname)) {
-      return "Names must have at least 2 characters";
-    }
-
-    return null;
-  }
-
-  async save(email: string, firstname: string, lastname: string): Promise<void> {
-    const validationError = this.validate(email, firstname, lastname);
-    if (validationError) {
-      throw new Error(validationError);
-    }
-
+  async save(user: User): Promise<void> {
     try {
       await this.sql`
         INSERT INTO users (email, firstname, lastname)
-        VALUES (${email}, ${firstname}, ${lastname});
+        VALUES (${user.email.getValue()}, ${user.firstname.getValue()}, ${user.lastname.getValue()});
       `;
     } catch (error) {
       console.error("Error saving user:", error);
