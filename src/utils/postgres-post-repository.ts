@@ -21,4 +21,12 @@ export default class PostgresPostRepository implements PostRepository {
     const rows = await this.sql`SELECT * FROM users;`;
     return rows.map((row: any) => new Post(row.email, row.firstname, row.lastname));
   }
+
+  async update(id: string, post: Post): Promise<void> {
+  await this.sql`
+  UPDATE users
+  SET email = ${post.getEmail()}, firstname = ${post.getFirstname()}, lastname = ${post.getLastname()}
+  WHERE id = ${id};
+`;
+}
 }
