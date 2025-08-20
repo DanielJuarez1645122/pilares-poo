@@ -1,5 +1,5 @@
 export class Email {
-  private readonly value: string;
+  public readonly value: string;
 
   constructor(value: string) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
