@@ -29,4 +29,8 @@ export default class PostgresPostRepository implements PostRepository {
   WHERE id = ${id};
 `;
 }
+
+  async delete(id: string): Promise<void> {
+    await this.sql`DELETE FROM users WHERE id = ${id};`;
+  }
 }

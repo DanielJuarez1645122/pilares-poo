@@ -1,5 +1,8 @@
 import PostRepository from "./post-repository";
 import { Post } from "./post";
+import { Email } from "./email";
+import { Firstname } from "./firstname";
+import { Lastname } from "./lastname";
 
 export default class InMemoryPostRepository implements PostRepository {
   private posts: Array<{ id: string; post: Post }> = [];
@@ -22,5 +25,10 @@ export default class InMemoryPostRepository implements PostRepository {
   if (index === -1) throw new Error("Post not found");
 
   this.posts[index].post = updatedPost;
+}
+public async delete(email: string): Promise<void> {
+  const index = this.posts.findIndex(p => p.post.getEmail() === email);
+  if (index === -1) throw new Error("Post not found");
+  this.posts.splice(index, 1);
 }
 }

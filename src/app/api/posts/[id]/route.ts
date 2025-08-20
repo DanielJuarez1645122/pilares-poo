@@ -22,3 +22,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    await repo.delete(params.id);
+    return NextResponse.json({ message: "Post deleted successfully" });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+}
